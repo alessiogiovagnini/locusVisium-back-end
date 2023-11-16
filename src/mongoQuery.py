@@ -27,6 +27,7 @@ def add_picture(file, longitude: float, latitude: float, text: str):
 # TODO return pictures based on coordinates
 def get_pictures(longitude: float, latitude: float, max_distance: float):
 
+    # geoJson query
     res = collection.find({
         "location": {
             "$near": {
