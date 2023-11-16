@@ -40,6 +40,9 @@ def get_pictures(longitude: float, latitude: float, max_distance: float):
             }
         }
     })
-    return res
+    return [el for el in res]
 
 
+# create an index to retrieve coordinates
+def make_index():
+    collection.create_index({"location": "2dsphere"})

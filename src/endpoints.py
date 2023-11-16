@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import request, jsonify
-from src.mongoQuery import add_picture
+from src.mongoQuery import add_picture, get_pictures
 
 app = Flask(__name__)
 
@@ -23,4 +23,13 @@ def upload():
 
 @app.route("/location", methods=["GET"])
 def location():
-    return "Hi"
+    try:
+        latitude = float(request.values.get("latitude"))
+        longitude = float(request.values.get("longitude"))
+        max_distance = float(request.values.get("max"))
+        res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance)
+        # TODO get the actual image data and return everything
+        print(res)
+        return jsonify({"code": 200})
+    except Exception as e:
+        return jsonify({"code": 500, "error": e})

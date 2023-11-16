@@ -10,3 +10,6 @@ install requirement
 ```shell
 python3 -m pip install -r requirement.txt
 ```
+
+# Database
+you need mongodb running on localhost on port: 27017. 
