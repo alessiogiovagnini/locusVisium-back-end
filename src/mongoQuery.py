@@ -39,7 +39,7 @@ def get_pictures(longitude: float, latitude: float, max_distance: float):
                 "$maxDistance": max_distance
             }
         }
-    })
+    }, {"_id": 0})  # the object Id is not serializable in the response, so this exclude it from the returned values
     return [el for el in res]
 
 

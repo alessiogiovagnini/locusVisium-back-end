@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request, jsonify
 from src.mongoQuery import add_picture, get_pictures
+import base64
 
 app = Flask(__name__)
 
@@ -28,8 +29,12 @@ def location():
         longitude = float(request.values.get("longitude"))
         max_distance = float(request.values.get("max"))
         res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance)
-        # TODO get the actual image data and return everything
-        print(res)
-        return jsonify({"code": 200})
+
+        files: dict = {}
+        for pic in res:
+            file = open(pic.get("path"), "rb")
+            files[pic.get("path")] = str(base64.b64encode(file.read()))
+
+        return jsonify({"code": 200, "data": res, "files": files})
     except Exception as e:
         return jsonify({"code": 500, "error": e})
