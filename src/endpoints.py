@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import request, jsonify
-from src.mongoQuery import add_picture, get_pictures
+from src.mongoQuery import add_picture, get_pictures, get_single_picture
 import base64
 
 app = Flask(__name__)
@@ -13,7 +13,8 @@ def upload():
         text = request.values.get("text")
         latitude = float(request.values.get("latitude"))
         longitude = float(request.values.get("longitude"))
-        # TODO also pass coordinates and text
+        if not file or not text or not latitude or not longitude:
+            return jsonify({"code": 400})
         res = add_picture(file=file, latitude=latitude, longitude=longitude, text=text)
         # TODO check the res and return appropriate code
         return jsonify({"code": 201})
@@ -22,12 +23,14 @@ def upload():
         return jsonify({"code": 500, "error": e})
 
 
-@app.route("/location", methods=["GET"])
-def location():
+@app.route("/locations", methods=["GET"])
+def locations():
     try:
         latitude = float(request.values.get("latitude"))
         longitude = float(request.values.get("longitude"))
         max_distance = float(request.values.get("max"))
+        if not latitude or not longitude or not max_distance:
+            return jsonify({"code": 400})
         res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance)
 
         files: dict = {}
@@ -36,6 +39,25 @@ def location():
             files[pic.get("path")] = str(base64.b64encode(file.read()))
 
         return jsonify({"code": 200, "data": res, "files": files})
+    except Exception as e:
+        return jsonify({"code": 500, "error": e})
+
+
+@app.route("/location", methods=["GET"])
+def location():
+    try:
+        latitude = float(request.args.get("latitude"))
+        longitude = float(request.args.get("longitude"))
+        if not latitude or not longitude:
+            return jsonify({"code": 400})
+
+        res = get_single_picture(longitude=longitude, latitude=latitude)
+        if not res:
+            return jsonify({"code": 404})
+        file = open(res.get("path"), "rb")
+        file_64 = str(base64.b64encode(file.read()))
+
+        return jsonify({"code": 200, "data": res, "file": file_64})
     except Exception as e:
         return jsonify({"code": 500, "error": e})
 

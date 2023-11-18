@@ -13,7 +13,6 @@ def randomword(length):
     return ''.join(random.choice(letters) for i in range(length))
 
 
-# TODO save picture with text
 def add_picture(file, longitude: float, latitude: float, text: str):
     path: Path = Path(f"data/{randomword(10)}-{datetime.datetime.now()}.png")
 
@@ -49,6 +48,22 @@ def get_pictures(longitude: float, latitude: float, max_distance: float):
         }
     }, {"_id": 0})  # the object Id is not serializable in the response, so this exclude it from the returned values
     return [el for el in res]
+
+
+def get_single_picture(longitude: float, latitude: float):
+    res = collection.find_one({
+        "location": {
+            "$near": {
+                "$geometry": {
+                    "type": "Point",
+                    "coordinates": [longitude, latitude]
+                },
+                "$minDistance": 0,
+                "$maxDistance": 1000
+            }
+        }
+    }, {"_id": 0})
+    return res
 
 
 # create an index to retrieve coordinates
