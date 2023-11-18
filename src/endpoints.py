@@ -9,7 +9,7 @@ app = Flask(__name__)
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
-        file = request.files.get("picture")
+        file = request.values.get("picture")
         text = request.values.get("text")
         latitude = float(request.values.get("latitude"))
         longitude = float(request.values.get("longitude"))
@@ -38,3 +38,8 @@ def location():
         return jsonify({"code": 200, "data": res, "files": files})
     except Exception as e:
         return jsonify({"code": 500, "error": e})
+
+
+@app.route("/", methods=["GET"])
+def ping():
+    return "pong"

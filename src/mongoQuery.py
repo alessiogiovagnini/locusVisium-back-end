@@ -1,16 +1,25 @@
 from pathlib import Path
 from pymongo import MongoClient
 import datetime
+import random, string, base64
 
 client = MongoClient(host="localhost", port=27017)
 db = client.locumVisiumDB
 collection = db.pictures
 
 
+def randomword(length):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(length))
+
+
 # TODO save picture with text
 def add_picture(file, longitude: float, latitude: float, text: str):
-    path: Path = Path(f"data/{file.name}-{datetime.datetime.now()}.png")
-    file.save(dst=path.absolute())
+    path: Path = Path(f"data/{randomword(10)}-{datetime.datetime.now()}.png")
+
+    decoded: bytes = base64.b64decode(file)
+    with open(path, 'wb') as output_file:
+        output_file.write(decoded)
 
     mongo_object = {
         "path": path.as_posix(),
@@ -26,7 +35,6 @@ def add_picture(file, longitude: float, latitude: float, text: str):
 
 # TODO return pictures based on coordinates
 def get_pictures(longitude: float, latitude: float, max_distance: float):
-
     # geoJson query
     res = collection.find({
         "location": {
