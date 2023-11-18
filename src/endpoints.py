@@ -36,7 +36,7 @@ def locations():
         files: dict = {}
         for pic in res:
             file = open(pic.get("path"), "rb")
-            files[pic.get("path")] = str(base64.b64encode(file.read()))
+            files[pic.get("path")] = base64.b64encode(file.read()).decode("ascii")
 
         return jsonify({"code": 200, "data": res, "files": files})
     except Exception as e:
@@ -55,7 +55,7 @@ def location():
         if not res:
             return jsonify({"code": 404})
         file = open(res.get("path"), "rb")
-        file_64 = str(base64.b64encode(file.read()))
+        file_64 = base64.b64encode(file.read()).decode("ascii")
 
         return jsonify({"code": 200, "data": res, "file": file_64})
     except Exception as e:
