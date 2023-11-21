@@ -26,9 +26,9 @@ def upload():
 @app.route("/locations", methods=["GET"])
 def locations():
     try:
-        latitude = float(request.values.get("latitude"))
-        longitude = float(request.values.get("longitude"))
-        max_distance = float(request.values.get("max"))
+        latitude = float(request.args.get("latitude"))
+        longitude = float(request.args.get("longitude"))
+        max_distance = float(request.args.get("max"))
         if not latitude or not longitude or not max_distance:
             return jsonify({"code": 400})
         res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance)
@@ -58,6 +58,35 @@ def location():
         file_64 = base64.b64encode(file.read()).decode("ascii")
 
         return jsonify({"code": 200, "data": res, "file": file_64})
+    except Exception as e:
+        return jsonify({"code": 500, "error": e})
+
+
+@app.route("/closerPoints", methods=["GET"])
+def get_picture():
+    try:
+
+        path: str = request.args.get("path")
+        file = open(path, "rb")
+        file_64 = base64.b64encode(file.read()).decode("ascii")
+
+        return jsonify({"code": 200, "file": file_64})
+
+    except Exception as e:
+        return jsonify({"code": 500, "error": e })
+
+
+@app.route("/locations", methods=["GET"])
+def locations_information():
+    try:
+        latitude = float(request.args.get("latitude"))
+        longitude = float(request.args.get("longitude"))
+        max_distance = float(request.args.get("max"))
+        if not latitude or not longitude or not max_distance:
+            return jsonify({"code": 400})
+        res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance)
+
+        return jsonify({"code": 200, "data": res})
     except Exception as e:
         return jsonify({"code": 500, "error": e})
 
