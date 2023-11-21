@@ -6,6 +6,7 @@ import base64
 app = Flask(__name__)
 
 
+# upload a picture to the server
 @app.route("/upload", methods=["POST"])
 def upload():
     try:
@@ -23,6 +24,7 @@ def upload():
         return jsonify({"code": 500, "error": e})
 
 
+# get all picture info and files in a certain radius from a location
 @app.route("/locations", methods=["GET"])
 def locations():
     try:
@@ -43,6 +45,7 @@ def locations():
         return jsonify({"code": 500, "error": e})
 
 
+# get a single picture from a position, return the closest picture in a radius of 1 km
 @app.route("/location", methods=["GET"])
 def location():
     try:
@@ -62,6 +65,7 @@ def location():
         return jsonify({"code": 500, "error": e})
 
 
+# get the file from a path
 @app.route("/picture", methods=["GET"])
 def get_picture():
     try:
@@ -76,6 +80,7 @@ def get_picture():
         return jsonify({"code": 500, "error": e })
 
 
+# get metadata of all pictures in a radius
 @app.route("/information", methods=["GET"])
 def locations_information():
     try:
