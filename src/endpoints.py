@@ -62,7 +62,7 @@ def location():
         return jsonify({"code": 500, "error": e})
 
 
-@app.route("/closerPoints", methods=["GET"])
+@app.route("/picture", methods=["GET"])
 def get_picture():
     try:
 
@@ -76,7 +76,7 @@ def get_picture():
         return jsonify({"code": 500, "error": e })
 
 
-@app.route("/locations", methods=["GET"])
+@app.route("/information", methods=["GET"])
 def locations_information():
     try:
         latitude = float(request.args.get("latitude"))
