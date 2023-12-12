@@ -1,7 +1,10 @@
-from pathlib import Path
-from pymongo import MongoClient
+import base64
 import datetime
-import random, string, base64
+import random
+import string
+from pathlib import Path
+
+from pymongo import MongoClient
 
 client = MongoClient(host="localhost", port=27017)
 db = client.locumVisiumDB
@@ -13,7 +16,7 @@ def randomword(length):
     return ''.join(random.choice(letters) for i in range(length))
 
 
-def add_picture(file, longitude: float, latitude: float, text: str):
+def add_picture(file, longitude: float, latitude: float, description: str, title: str, tags: list[str]):
     path: Path = Path(f"data/{randomword(10)}-{datetime.datetime.now()}.png")
 
     decoded: bytes = base64.b64decode(file)
@@ -22,7 +25,9 @@ def add_picture(file, longitude: float, latitude: float, text: str):
 
     mongo_object = {
         "path": path.as_posix(),
-        "text": text,
+        "description": description,
+        "title": title,
+        "tags": tags,
         "location": {
             "type": "Point",
             "coordinates": [longitude, latitude]
@@ -33,9 +38,10 @@ def add_picture(file, longitude: float, latitude: float, text: str):
 
 
 # TODO return pictures based on coordinates
-def get_pictures(longitude: float, latitude: float, max_distance: float):
+def get_pictures(longitude: float, latitude: float, max_distance: float, tags: list[str] = []):
     # geoJson query
-    res = collection.find({
+    # the object Id is not serializable in the response, so this excludes it from the returned values
+    filter: dict = {
         "location": {
             "$near": {
                 "$geometry": {
@@ -46,7 +52,10 @@ def get_pictures(longitude: float, latitude: float, max_distance: float):
                 "$maxDistance": max_distance
             }
         }
-    }, {"_id": 0})  # the object Id is not serializable in the response, so this exclude it from the returned values
+    }
+    if len(tags) != 0:
+        filter["tags"] = {"$all": tags}
+    res = collection.find(filter=filter, projection={"_id": 0})
     return [el for el in res]
 
 

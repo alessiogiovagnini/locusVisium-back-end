@@ -1,4 +1,8 @@
-from flask import Flask
+import json
+from functools import wraps
+from http import HTTPStatus
+
+from flask import Flask, abort, Response
 from flask import request, jsonify
 from src.mongoQuery import add_picture, get_pictures, get_single_picture
 import base64
@@ -6,22 +10,35 @@ import base64
 app = Flask(__name__)
 
 
+def ensure_required_fields_are_filled(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not request.values.get("picture"):
+            return abort(HTTPStatus.BAD_REQUEST, "Missing field picture")
+        if not request.values.get("description"):
+            return abort(HTTPStatus.BAD_REQUEST, "Missing field description")
+        if not request.values.get("title"):
+            return abort(HTTPStatus.BAD_REQUEST, "Missing field title")
+        return f(*args, **kwargs)
+    return decorated
+
+
 # upload a picture to the server
 @app.route("/upload", methods=["POST"])
+@ensure_required_fields_are_filled
 def upload():
     try:
-        file = request.values.get("picture")
-        text = request.values.get("text")
-        latitude = float(request.values.get("latitude"))
-        longitude = float(request.values.get("longitude"))
-        if not file or not text or not latitude or not longitude:
-            return jsonify({"code": 400})
-        res = add_picture(file=file, latitude=latitude, longitude=longitude, text=text)
+        file: str = request.values.get("picture")
+        description: str = request.values.get("description")
+        latitude: float = float(request.values.get("latitude"))
+        longitude: float = float(request.values.get("longitude"))
+        tags: list[str] = json.loads(request.values.get("tags")) if request.values.get("tags") else []
+        title: str = request.values.get("title")
+        res = add_picture(file=file, latitude=latitude, longitude=longitude, description=description, title=title, tags=tags)
         # TODO check the res and return appropriate code
-        return jsonify({"code": 201})
-
+        return Response("File uploaded successfully", status=HTTPStatus.OK)
     except Exception as e:
-        return jsonify({"code": 500, "error": e})
+        return Response("File couldn't be uploaded because of a server error", status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
 # get all picture info and files in a certain radius from a location
@@ -31,9 +48,10 @@ def locations():
         latitude = float(request.args.get("latitude"))
         longitude = float(request.args.get("longitude"))
         max_distance = float(request.args.get("max"))
+        tags: list[str] = json.loads(request.values.get("tags")) if request.values.get("tags") else []
         if not latitude or not longitude or not max_distance:
             return jsonify({"code": 400})
-        res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance)
+        res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance, tags=tags)
 
         files: dict = {}
         for pic in res:
@@ -87,9 +105,10 @@ def locations_information():
         latitude = float(request.args.get("latitude"))
         longitude = float(request.args.get("longitude"))
         max_distance = float(request.args.get("max"))
+        tags: list[str] = json.loads(request.values.get("tags")) if request.values.get("tags") else []
         if not latitude or not longitude or not max_distance:
             return jsonify({"code": 400})
-        res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance)
+        res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance, tags=tags)
 
         return jsonify({"code": 200, "data": res})
     except Exception as e:
