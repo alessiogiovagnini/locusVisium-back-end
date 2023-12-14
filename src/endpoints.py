@@ -34,10 +34,12 @@ def upload():
         longitude: float = float(request.values.get("longitude"))
         tags: list[str] = json.loads(request.values.get("tags")) if request.values.get("tags") else []
         title: str = request.values.get("title")
-        res = add_picture(file=file, latitude=latitude, longitude=longitude, description=description, title=title, tags=tags)
+        provider: str = request.values.get("provider")
+        res = add_picture(file=file, latitude=latitude, longitude=longitude, description=description, title=title, tags=tags, provider=provider)
         # TODO check the res and return appropriate code
         return Response("File uploaded successfully", status=HTTPStatus.OK)
     except Exception as e:
+        print(e)
         return Response("File couldn't be uploaded because of a server error", status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
@@ -53,12 +55,12 @@ def locations():
             return jsonify({"code": 400})
         res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance, tags=tags)
 
-        files: dict = {}
-        for pic in res:
-            file = open(pic.get("path"), "rb")
-            files[pic.get("path")] = base64.b64encode(file.read()).decode("ascii")
+        #files: dict = {}
+        #for pic in res:
+         #   file = open(pic.get("path"), "rb")
+          #  files[pic.get("path")] = base64.b64encode(file.read()).decode("ascii")
 
-        return jsonify({"code": 200, "data": res, "files": files})
+        return jsonify({"code": 200, "data": res})
     except Exception as e:
         return jsonify({"code": 500, "error": e})
 

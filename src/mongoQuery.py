@@ -16,7 +16,7 @@ def randomword(length):
     return ''.join(random.choice(letters) for i in range(length))
 
 
-def add_picture(file, longitude: float, latitude: float, description: str, title: str, tags: list[str]):
+def add_picture(file, longitude: float, latitude: float, description: str, title: str, tags: list[str], provider: str):
     path: Path = Path(f"data/{randomword(10)}-{datetime.datetime.now()}.png")
 
     decoded: bytes = base64.b64decode(file)
@@ -28,6 +28,7 @@ def add_picture(file, longitude: float, latitude: float, description: str, title
         "description": description,
         "title": title,
         "tags": tags,
+        "provider": provider,
         "location": {
             "type": "Point",
             "coordinates": [longitude, latitude]
