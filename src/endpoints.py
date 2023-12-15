@@ -1,6 +1,7 @@
 import json
 from functools import wraps
 from http import HTTPStatus
+from pathlib import Path
 
 from flask import Flask, abort, Response
 from flask import request, jsonify
@@ -89,15 +90,15 @@ def location():
 @app.route("/picture", methods=["GET"])
 def get_picture():
     try:
-
-        path: str = request.args.get("path")
+        path: Path = Path(request.args.get("path"))
+        if not path.exists():
+            return Response("The specified file doesn't exist", status=HTTPStatus.BAD_REQUEST)
         file = open(path, "rb")
         file_64 = base64.b64encode(file.read()).decode("ascii")
-
         return jsonify({"code": 200, "file": file_64})
 
     except Exception as e:
-        return jsonify({"code": 500, "error": e })
+        return jsonify({"code": 500, "error": e})
 
 
 # get metadata of all pictures in a radius
@@ -108,7 +109,7 @@ def locations_information():
         longitude = float(request.args.get("longitude"))
         max_distance = float(request.args.get("max"))
         tags: list[str] = json.loads(request.values.get("tags")) if request.values.get("tags") else []
-        if not latitude or not longitude or not max_distance:
+        if latitude is None or longitude is None or max_distance is None:
             return jsonify({"code": 400})
         res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance, tags=tags)
 
