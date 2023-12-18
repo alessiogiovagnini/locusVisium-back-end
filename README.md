@@ -6,6 +6,12 @@ make virtual env
 ```shell
 python3 -m venv ./.venv
 ```
+
+# activate virtual environment
+```shell
+source .venv/bin/activate
+```
+
 install requirement
 ```shell
 python3 -m pip install -r requirement.txt
