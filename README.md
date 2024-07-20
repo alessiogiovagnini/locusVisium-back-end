@@ -24,6 +24,10 @@ Locum Visium is a community-based social media Android app designed to help user
 
    Here's the revised version of the installation and usage guide, with improved clarity and grammar:
 
+## Android App git 
+[Android app git](https://github.com/JacobSalvi/mwc-project)
+
+
 ## Installation
 Create a virtual environment:
 ```shell
