@@ -72,7 +72,6 @@ def load_credentials(config_file):
     with open(config_file, 'r') as file:
         return json.load(file)
 
-
 def main():
     config = load_credentials('/Users/msstudiohd/PycharmProjects/locusVisium-back-end/config.json')
     YOUR_API_KEY = config['API_KEY']
@@ -82,7 +81,7 @@ def main():
     downloaded_urls = set()
     base_path = '/Users/msstudiohd/PycharmProjects/locusVisium-back-end/data'
 
-    file_path = '/Users/msstudiohd/PycharmProjects/locusVisium-back-end/src/mock_data.json'  # Replace with your actual file path
+    file_path = '/Users/msstudiohd/PycharmProjects/locusVisium-back-end/src/mock_data_2.json'
     with open(file_path, 'r') as file:
         data = json.load(file)
 
@@ -101,4 +100,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    file_path = '/Users/msstudiohd/PycharmProjects/locusVisium-back-end/src/mock_data_2.json'
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+    load_data_into_mongodb(data)
+

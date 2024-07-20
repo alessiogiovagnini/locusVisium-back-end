@@ -54,6 +54,7 @@ def get_pictures(longitude: float, latitude: float, max_distance: float, tags: l
             }
         }
     }
+    #filter = {}
     if len(tags) != 0:
         filter["tags"] = {"$all": tags}
     res = collection.find(filter=filter, projection={"_id": 0})

@@ -55,10 +55,10 @@ def locations():
             return jsonify({"code": 400})
         res = get_pictures(longitude=longitude, latitude=latitude, max_distance=max_distance, tags=tags)
 
-        #files: dict = {}
-        #for pic in res:
-         #   file = open(pic.get("path"), "rb")
-          #  files[pic.get("path")] = base64.b64encode(file.read()).decode("ascii")
+        files: dict = {}
+        for pic in res:
+            file = open(pic.get("path"), "rb")
+            files[pic.get("path")] = base64.b64encode(file.read()).decode("ascii")
 
         return jsonify({"code": 200, "data": res})
     except Exception as e:
