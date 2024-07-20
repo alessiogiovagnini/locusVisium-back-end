@@ -5,7 +5,7 @@ Locum Visium is a community-based social media Android app designed to help user
 
 ## Overview 
 # LocumVisium Back-end
-<img src="gitData/Locum%20Visium.gif" alt="overview gif" width="500" height="1080">
+<img src="gitData/Locum%20Visium.gif" alt="overview gif" width="500" height="700">
 
 [Overview Video](https://www.youtube.com/watch?v=UocxDTZqIPg&ab_channel=MSstudioHD)
 
