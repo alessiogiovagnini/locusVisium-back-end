@@ -1,4 +1,4 @@
-9# LocumVisium Back-End
+# LocumVisium Back-End
 <img src="gitData/ic_launcher.webp" alt="Locum Visum Logo" width="170" height="170">
 
 Locum Visium is a community-based social media Android app designed to help users discover popular local places and events near their position. 📍📱
