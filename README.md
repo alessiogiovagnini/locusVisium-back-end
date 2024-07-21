@@ -1,4 +1,4 @@
-# LocumVisium Back-End
+9# LocumVisium Back-End
 <img src="gitData/ic_launcher.webp" alt="Locum Visum Logo" width="170" height="170">
 
 Locum Visium is a community-based social media Android app designed to help users discover popular local places and events near their position. 📍📱
@@ -52,8 +52,6 @@ The script **src/database_creator.py** includes functionality to retrieve images
 
 - Set `YOUR_API_KEY` to your Google API key.
 - Set `YOUR_CSE_ID` to your Custom Search Engine ID.
-
-Here's an improved version of the instruction to run the application:
 
 ## Running the Application
 To start the application, execute the script **main.py**:
