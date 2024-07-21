@@ -1,4 +1,4 @@
-# LocumVisium Android App
+# LocumVisium Back-End
 <img src="gitData/ic_launcher.webp" alt="Locum Visum Logo" width="170" height="170">
 
 Locum Visium is a community-based social media Android app designed to help users discover popular local places and events near their position. 📍📱
@@ -20,8 +20,6 @@ Locum Visium is a community-based social media Android app designed to help user
 - **GoogleImagesSearch API**: To retrieve images for the mock data.
 - Android Camera and GPS Integration
 - **Backend Server**: Developed using Python with Flask.
-
-   Here's the revised version of the installation and usage guide, with improved clarity and grammar:
 
 ## Android App git 
 [Android app git](https://github.com/JacobSalvi/mwc-project)
